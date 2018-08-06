@@ -1,0 +1,334 @@
+{% extends "base/base_site.html" %}
+
+{% block content %}
+        <div class="row">
+                    <div class="col-lg-3">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <span class="label label-success pull-right">Monthly</span>
+                                <h5>监控节点</h5>
+                            </div>
+                            <div class="ibox-content">
+                                    <h1 class="no-margins">{{data.hosts_count.active_hosts}} 台</h1>
+                                    主机数量(已启用/已禁用/模板)
+                                    <small class="text-warning"><b>{{data.hosts_count.active_hosts}}</b></small>/<small class="text-danger"><b>{{data.hosts_count.disabled_hosts}}</b></small>/<small class="text-info"><b>{{data.hosts_count.tempaltes}}</b></small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <span class="label label-info pull-right">Annual</span>
+                                <h5>采集频率</h5>
+                            </div>
+                            <div class="ibox-content">
+                                <h1 class="no-margins">{{data.nvps}} 次/秒</h1>
+                                监控项数量(已启用/已禁用/不支持)
+                                <small class="text-warning"><b>{{data.items_count.active_items}}</b></small>/<small class="text-danger"><b>{{data.items_count.disabled_items}}</b></small>/<small class="text-info"><b>{{data.items_count.nosupport_items}}</b></small>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <span class="label label-primary pull-right">Today</span>
+                                <h5>当前告警数量</h5>
+                            </div>
+                            <div class="ibox-content">
+                                <h1 class="no-margins">{{data.issues.issues_count}}条</h1>
+                                <!--
+                                <div class="stat-percent font-bold text-navy">44% <i class="fa fa-level-up"></i></div>-->
+                                <small>Zabbix Issues数量</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <span class="label label-danger pull-right">Low value</span>
+                                <h5>当前故障设备</h5>
+                            </div>
+                            <div class="ibox-content">
+                                <h1 class="no-margins">{{data.issues.issues_device_count}}台</h1>
+                                <!--
+                                <div class="stat-percent font-bold text-danger">38% <i class="fa fa-level-down"></i></div> -->
+                                <small>Zabbix Issues设备数量</small>
+                            </div>
+                        </div>
+            </div>
+        </div>
+<div class="row">
+    <div class="col-lg-6">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>故障数量趋势</h5>
+                <div class="pull-right">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-xs btn-white active">最近一个月</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="col-lg-12" id="issues" style="height:300px"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+        <div class="col-lg-6">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>故障设备趋势</h5>
+                <div class="pull-right">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-xs btn-white active">最近一个月</button>
+                    </div>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="col-lg-12" id="devices" style="height:300px"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+                <div class="row">
+
+                    <div class="col-lg-8">
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-title">
+                                        <h5>CPU TOP10<small> 最近5分钟</small></h5>
+                                        <div class="ibox-tools">
+                                            <a class="collapse-link">
+                                                <i class="fa fa-chevron-up"></i>
+                                            </a>
+                                            <a class="close-link">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="ibox-content">
+                                        <ul class="todo-list m-t small-list">
+                                            {% for k, v in data.assets_top.cpu.items %}
+                                          <li>
+                                                <span class="m-l-xs">主机</span>
+                                                <span class="text-success"><b>{{k}}</b></span>
+                                                <span>的CPU使用率为</span>
+                                                {% if v > 80 %}
+                                                <span class="btn btn-danger btn-xs disabled" style="margin-left:15px">{{v}}%</span>
+                                                {% elif v > 50 and v < 80 %}
+                                                <span class="btn btn-warning btn-xs disabled" style="margin-left:15px">{{v}}%</span>
+                                                {% elif v > 40 and v < 50 %}
+                                                <span class="btn btn-primary btn-xs disabled" style="margin-left:15px">{{v}}%</span>
+                                                {% elif v < 40 %}
+                                                <span class="btn btn-info btn-xs disabled" style="margin-left:15px">{{v}}%</span>                           
+                                                {% endif %}
+                                            </li>                                          
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-title">
+                                        <h5>MEM TOP10<small> 最近5分钟</small></h5>
+                                        <div class="ibox-tools">
+                                            <a class="collapse-link">
+                                                <i class="fa fa-chevron-up"></i>
+                                            </a>
+                                            <a class="close-link">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="ibox-content">
+                                        <ul class="todo-list m-t small-list">
+                                            {% for k, v in data.assets_top.mem.items %}
+                                            <li>
+                                                <span class="m-l-xs">主机</span>
+                                                <span class="text-success"><b>{{k}}</b></span>
+                                                <span>的内存使用率为</span>
+                                                {% if v > 80 %}
+                                                <span class="btn btn-danger btn-xs disabled" style="margin-left:15px">{{v}}%</span>
+                                                {% elif v > 50 and v < 80 %}
+                                                <span class="btn btn-warning btn-xs disabled" style="margin-left:15px">{{v}}%</span>
+                                                {% elif v > 40 and v < 50 %}
+                                                <span class="btn btn-primary btn-xs disabled" style="margin-left:15px">{{v}}%</span>
+                                                {% elif v < 40 %}
+                                                <span class="btn btn-info btn-xs disabled" style="margin-left:15px">{{v}}%</span>                           
+                                                {% endif %}
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-title">
+                                        <h5>Transactions worldwide</h5>
+                                        <div class="ibox-tools">
+                                            <a class="collapse-link">
+                                                <i class="fa fa-chevron-up"></i>
+                                            </a>
+                                            <a class="close-link">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="ibox-content">
+
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <table class="table table-hover margin bottom">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width: 1%" class="text-center">No.</th>
+                                                            <th>Transaction</th>
+                                                            <th class="text-center">Date</th>
+                                                            <th class="text-center">Amount</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="text-center">1</td>
+                                                            <td> Security doors
+                                                            </td>
+                                                            <td class="text-center small">16 Jun 2014</td>
+                                                            <td class="text-center"><span class="label label-primary">$483.00</span></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-center">2</td>
+                                                            <td> Wardrobes
+                                                            </td>
+                                                            <td class="text-center small">10 Jun 2014</td>
+                                                            <td class="text-center"><span class="label label-primary">$327.00</span></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-center">3</td>
+                                                            <td> Set of tools
+                                                            </td>
+                                                            <td class="text-center small">12 Jun 2014</td>
+                                                            <td class="text-center"><span class="label label-warning">$125.00</span></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-center">4</td>
+                                                            <td> Panoramic pictures</td>
+                                                            <td class="text-center small">22 Jun 2013</td>
+                                                            <td class="text-center"><span class="label label-primary">$344.00</span></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-center">5</td>
+                                                            <td>Phones</td>
+                                                            <td class="text-center small">24 Jun 2013</td>
+                                                            <td class="text-center"><span class="label label-primary">$235.00</span></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-center">6</td>
+                                                            <td>Monitors</td>
+                                                            <td class="text-center small">26 Jun 2013</td>
+                                                            <td class="text-center"><span class="label label-primary">$100.00</span></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-lg-6">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-4">
+                    <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>当前故障列表</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="#">Config option 1</a>
+                                </li>
+                                <li><a href="#">Config option 2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="ibox-content inspinia-timeline">
+
+                        {% for i in data.latest_problem %}
+                        <div class="timeline-item">
+                            <div class="row">
+                                <div class="col-xs-3 date">
+                                    <i class="fa fa-file-text"></i>
+                                    {{i.lastchange}}
+                                    <br>
+                                    <small class="text-navy" style="color:{{i.color}}" ><b>{{i.priority}}</b></small>
+                                </div>
+                                <div class="col-xs-7 content">
+                                    <p class="m-b-xs" style="color:{{i.color}}" >
+                                        <strong>{{i.host}}:{{i.name}}</strong>
+                                    </p>
+                                    <p class="text-info">主机组: {{i.group}}</p>
+                                    <p>持续时间: {{i.duration}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        
+                    </div>
+                </div>
+                </div>
+
+
+                </div>
+{% endblock content %}
+
+{% block javascripts %}
+{{ block.super}}
+<script src="/static/js/plugins/echarts/echarts.min.js"></script>
+<script src="/static/js/plugins/echarts/theme/vintage.js"></script>
+<script type="text/javascript">
+  $.ajax({
+        type: 'get', 
+        url: '/zabbix/trends',
+        dataType: 'json',
+        async: true,
+        success: function (result) {
+            if (result) {
+                $.each(result,function(k,v){
+                    custom_echart(k,v);
+                })
+            }            
+        },
+        error: function () { //请求失败
+            alert("Error");
+        }
+    });
+
+</script>
+<script type="text/javascript">
+</script>
+{% endblock %}

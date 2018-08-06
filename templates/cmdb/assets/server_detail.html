@@ -1,0 +1,180 @@
+{% extends 'base/base_site.html' %}
+{% load custom_tags %}
+{% block css %}
+{{ block.super}}
+<style type="text/css">
+  .noshow th {
+    color:#676a6c; 
+    border: 0px solid transparent !important;
+  }
+.noshow td{
+     border: 0px solid transparent !important;
+ }
+</style>
+{% endblock%}
+
+{% block content %}
+<div class="ibox-title">
+    <h5>主机信息</h5>
+</div>
+<div class="ibox-content">
+    <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel blank-panel">
+                    <div class="panel-heading">
+                        <div class="panel-options">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#tab-1" data-toggle="tab">基本信息</a></li>
+                                <li class=""><a href="#tab-2" data-toggle="tab">配置信息</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="tab-content">
+
+                            <div class="tab-pane active" id="tab-1">
+
+                                        <div class="col-lg-6">
+                                                <table class="table noshow">
+
+                                                    <tbody >
+                                                        <tr>
+                                                            <th class="col-lg-1">主机名:</th>
+                                                            <td class="col-lg-2">{{serverasset.hostname}}</td>
+                                                            <th class="col-lg-1">机房:</th>
+                                                            <td class="col-lg-2">{{serverasset.idc}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>IP:</th>
+                                                            <td>{{serverasset.ip}}</td>
+                                                            <th>主机类型:</th>
+                                                            <td>{{serverasset.virtual}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>运维负责人:</th>
+                                                            <td>
+                                                                {{serverasset.ops}}
+                                                            </td>
+                                                            <th>运营状态:</th>
+                                                            <td>
+                                                                {{serverasset.get_status_display}}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>开发负责人:</th>
+                                                            <td>{{serverasset.dev}}</td>
+                                                            <th>Salt-Master:</th>
+                                                            <td>{{serverasset.salt}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Salt-minon版本:</th>
+                                                            <td class="text-muted">{{serverasset.saltversion}}</td>
+
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                        </div>
+
+                            </div>
+
+                            <div class="tab-pane" id="tab-2">
+                               <div class="col-lg-9">
+
+                                    <table class="table noshow">
+
+                                            <tbody >
+                                                <tr>
+                                                    <th class="col-lg-1">操作系统:</th>
+                                                    <td class="col-lg-2">{{serverasset.os}}</td>
+                                                    <th class="col-lg-1">shell:</th>
+                                                    <td class="col-lg-2">{{serverasset.shell}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>产品型号:</th>
+                                                    <td>{{serverasset.productname}}</td>
+                                                    <th>序列号:</th>
+                                                    <td>{{serverasset.sn}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>CPU型号:</th>
+                                                    <td>
+                                                        {{serverasset.cpu_model}}
+                                                    </td>
+                                                    <th>CPU核数:</th>
+                                                    <td>
+                                                        {{serverasset.cpu_nums}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>内核:</th>
+                                                    <td>{{serverasset.kernel}}</td>
+                                                    <th>内存:</th>
+                                                    <td class="text-muted">{{serverasset.memory}}</td>
+                                                </tr>
+                                                 <tr>
+                                                    <th>磁盘容量:</th>
+                                                    <td>{{serverasset.disk|strtodict:"total"}}</td>
+                                                </tr>
+                                            </tbody>
+                                    </table>
+                                </div>      
+                               <div class="col-lg-6">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th width="30%">网卡名称</th>
+                                                <th width="35%">IP</th>
+                                                <th width="35%">Mac地址</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for i in network %}
+                                            <tr>
+                                                <td>{{ i.name }}</td>
+                                                <td>{{ i.address }}</td>
+                                                <td>{{ i.mac }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th width="30%">磁盘分区</th>
+                                                <th width="35%">挂载点</th>
+                                                <th width="35%">容量</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% with dict=serverasset.disk|strtodict:"all" %}
+                                            {% for key,value in dict.items %}
+                                              {% if key == 'total' %}
+                                              {% else %}
+                                              <tr>
+                                                <td>{{ key }}</td>
+                                                <td>{{ value.0 }}</td>
+                                                <td>{{ value.1 }}</td>
+                                              </tr>
+                                              {% endif %}
+                                            {% endfor %}
+                                        {% endwith %}                                         
+                                        </tbody>
+                                    </table>
+                                </div>
+
+
+
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

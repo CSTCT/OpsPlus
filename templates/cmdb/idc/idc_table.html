@@ -1,0 +1,17 @@
+{% load custom_tags %}
+    {% for i in data.content %}
+    <tr class="gradeA odd" role="row">
+        <td>{{ i.name }}</td>
+        <td>{{ i.isp }}</td>
+        <td class="center">{{ i.address }}</td>
+        <td class="center">{{ i.contact }}</td>
+        <td class="center">{{ i.phone }}</td>
+        <td class="center">{{ i.network | strsubst}}</td>
+        <td class="center">{{ i.comment }}</td>
+        <td class="center">{{ i.update_time }}</td>
+        <td class="center">
+            <a href={% url 'cmdb_idc_edit' %}?uuid={{i.uuid}} class="btn btn-xs btn-success btn-edit">编辑</a>
+            <a href={% url 'cmdb_idc_del' %}?uuid={{i.uuid}} class="btn btn-xs btn-danger" onclick="return confirm('确认删除吗？')">删除</a>
+        </td>
+    </tr>
+    {% endfor %}

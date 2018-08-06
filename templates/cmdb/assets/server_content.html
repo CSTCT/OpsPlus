@@ -1,0 +1,38 @@
+{% for i in form %}
+
+{% if i.name == 'ip' or i.name == 'idc' or i.name == 'salt' or i.name == 'status'  or i.name == 'ops' or i.name == 'dev' %}
+	<div class="form-group">
+	    <label class="col-sm-2 control-label">{{i.label}}</label>
+	    <div class="col-sm-8">{{i}}</div>
+	    {{i.error}}
+	</div>
+{% else %}
+	{% if forloop.counter == 7 %}
+	<div id="collapseTwo" class="panel-collapse collapse">
+	{% endif %}
+		<div class="form-group">
+		    <label class="col-sm-2 control-label">{{i.label}}</label>
+		    <div class="col-sm-8">{{i}}</div>
+		    {{i.error}}
+		</div>
+{% endif %}
+{% endfor %}
+</div>
+<div class="panel-heading col-sm-3 control-label">
+        <h4 class="panel-title">
+        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" style="color: #18a689">
+           显示可由 Salt 发现的属性... 
+        </a>
+      </h4>
+</div>
+<div class="form-group">
+<div style="padding-left: 200px;color:red">
+    <div class="col-sm-8"><b>{{ error }}</b></div>
+</div>
+</div>
+<div class="form-group">
+    <div class="col-sm-4 col-sm-offset-2">
+        <button class="btn btn-white" type="submit">Cancel</button>
+        <button class="btn btn-primary" type="submit">Save changes</button>
+    </div>
+</div>

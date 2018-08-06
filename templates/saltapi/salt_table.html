@@ -1,0 +1,25 @@
+{% for i in data.content %}
+    <tr>
+        <td><a href={% url 'get_minion_keys' %}?saltserver={{ i.uuid }}>{{ i.name }}</a></td>
+        <td>{{ i.host }}</td>
+        <td class="center">
+        {% if i.status %}
+            <span class="badge badge-warning">在</span>
+        {% else %}
+            <span class="badge badge-danger">离</span>
+        {% endif %}
+
+        </td>
+        <td class="center">{{ i.comment }}</td>
+        <td class="center">{{ i.update_time }}</td>
+
+        <td class="center">
+            <a href={% url 'salt_edit' %}?uuid={{i.uuid}} class="btn btn-xs btn-success">编辑</a>
+            <a href={% url 'salt_del' %}?uuid={{i.uuid}} class="btn btn-xs btn-danger" onclick="return confirm('确认删除吗？')">删除</a>
+        </td>
+    </tr>
+{% endfor %}
+
+<script type="text/javascript">
+    
+</script>

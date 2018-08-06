@@ -1,0 +1,247 @@
+{% extends 'base/base_site.html' %} 
+<link href="/static/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+<link href="/static/css/animate.css" rel="stylesheet">
+<link href="/static/css/style.css" rel="stylesheet">
+{% block css %}
+{{ block.super}}
+
+<style type="text/css">
+    .panel-title {
+        color: #676A6C;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>管理 Minions Keys</h5>
+            <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
+            </div>
+            </div>
+            <div class="ibox-content">
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                已接受到的KEY
+                                 </a>
+                                <span class="badge" style="margin-top: 0;background-color: #1ab394;">{{data.accept.count}}</span>
+                                <i class="indicator glyphicon glyphicon-chevron-down  pull-right"></i>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse in">
+                        <div class="ibox-content">
+
+                            <table class="table">
+                              <thead>
+                                <tr role="row">
+                                  <th>Minion</th>
+                                  <th>SaltServer</th>
+                                  <th>状态</th>
+                                  <th>操作</th>          
+                                </tr>
+                              </thead>
+                              <tbody id="content">
+                              {% for i in data.accept.lists.content %}
+                                    <tr>
+                                        <td>{{ i.minion }}</td>
+                                        <td>{{ i.saltserver.name }}</td>
+                                        <td>
+                                            <span class="label label-primary">{{ i.get_status_display }}</span>
+                                        <td>
+                                            <button class="btn btn-xs btn-info monitor-status-edt" data-toggle="modal" data-row={{ i.minion }} data-target="#status">修改</button>
+                                        </td>
+                                    </tr>
+                              {% endfor %}
+                              </tbody>
+                            </table>
+                            {% include 'saltapi/salt_keys_paginator.html' %}
+                          </div>
+
+                        </div>
+                        </div>
+
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                            <a id="collapse2" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                               未接受的KEY 
+                            <span class="badge" style="margin-top: 0;background-color: #23C6C8;">{{data.unaccept.count}}</span>
+                            </a><i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i>
+                          </h4>
+                        </div>
+                        <div id="collapseTwo" class="panel-collapse collapse">
+                        <div class="ibox-content">
+                            <table class="table">
+                              <thead>
+                                <tr role="row">
+                                  <th>Minion</th>
+                                  <th>SaltServer</th>
+                                  <th>状态</th>
+                                  <th>操作</th>          
+                                </tr>
+                              </thead>
+                              <tbody id="content">
+                              {% for i in data.unaccept.lists %}
+                                    <tr>
+                                        <td>{{ i.minion }}</td>
+                                        <td>{{ i.saltserver.name }}</td>
+                                        <td>
+                                            <span class="label label-info">{{ i.get_status_display }}</span>
+                                        <td>
+                                            <button class="btn btn-xs btn-info monitor-status-edt" data-toggle="modal" data-row={{ i.minion }} data-target="#status">修改</button>
+                                        </td>
+                                    </tr>
+                              {% endfor %}
+                              </tbody>
+                            </table>
+                        </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                            <a  class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                              已拒绝的KEY 
+                            <span class="badge" style="margin-top: 0;background-color: #F8AC59;">{{data.reject.count}}</span>
+                            </a><i class="indicator glyphicon glyphicon-chevron-up pull-right"></i>
+                          </h4>
+                        </div>
+                        <div id="collapseThree" class="panel-collapse collapse">
+                        <div class="ibox-content">
+                            <table class="table">
+                              <thead>
+                                <tr role="row">
+                                  <th>Minion</th>
+                                  <th>SaltServer</th>
+                                  <th>状态</th>
+                                  <th>操作</th>          
+                                </tr>
+                              </thead>
+                              <tbody id="content">
+                              {% for i in data.reject.lists %}
+                                    <tr>
+                                        <td>{{ i.minion }}</td>
+                                        <td>{{ i.saltserver.name }}</td>
+                                        <td>
+                                            <span class="label label-warning">{{ i.get_status_display }}</span>
+                                        <td>
+                                            <button class="btn btn-xs btn-info monitor-status-edt" data-toggle="modal" data-row={{ i.minion }} data-target="#status">修改</button>
+                                        </td>
+                                    </tr>
+                              {% endfor %}
+                              </tbody>
+                            </table>
+                        </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                            <a  class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
+                              已禁止的KEY
+                            <span class="badge" style="margin-top: 0;background-color: #ED5565;">{{data.denied.count}}</span> 
+                            </a><i class="indicator glyphicon glyphicon-chevron-up pull-right"></i>
+                          </h4>
+                        </div>
+                        <div id="collapseFour" class="panel-collapse collapse">
+                        <div class="ibox-content">
+                            <table class="table">
+                              <thead>
+                                <tr role="row">
+                                  <th>Minion</th>
+                                  <th>SaltServer</th>
+                                  <th>状态</th>
+                                  <th>操作</th>          
+                                </tr>
+                              </thead>
+                              <tbody id="content">
+                              {% for i in data.denied.lists %}
+                                    <tr>
+                                        <td>{{ i.minion }}</td>
+                                        <td>{{ i.saltserver.name }}</td>
+                                        <td>
+                                            <span class="label label-danger">{{ i.get_status_display }}</span>
+                                        <td>
+                                            <button class="btn btn-xs btn-info monitor-status-edt" data-toggle="modal" data-row={{ i.minion }} data-target="#status">修改</button>
+                                        </td>
+                                    </tr>
+                              {% endfor %}
+                              </tbody>
+                            </table>
+                            {% include 'saltapi/salt_keys_modal.html' %}
+
+                        </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+{{ block.super}}
+<script type="text/javascript">
+    function toggleChevron(e) {
+    $(e.target)
+        .prev('.panel-heading')
+        .find("i.indicator")
+        .toggleClass('glyphicon-chevron-down glyphicon-chevron-up');
+    }
+    $('#accordion').on('hidden.bs.collapse', toggleChevron);
+    $('#accordion').on('shown.bs.collapse', toggleChevron);
+
+</script>
+
+<script type="text/javascript">
+    $('.monitor-status-edt').on('click',function(event){
+        var btn = $(event.target);
+        var minion = btn.data('row');
+        $('.monitor-commit').on('click',function(){
+            var status = $("#minion-status").val();
+            $.ajax({
+                type: "POST",
+                url: "{% url 'minion_status' %}",
+                async: true,
+                data: {"minion": minion,"status": status},
+
+                success: function(data,textStatus){
+                      window.location.reload()
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                      alert(XMLHttpRequest.status);
+                      alert(XMLHttpRequest.readyState);
+                      alert(textStatus);
+                },
+            });
+
+
+        });
+    });
+
+</script>
+{% endblock %}

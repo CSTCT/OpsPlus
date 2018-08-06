@@ -1,0 +1,20 @@
+{% for i in form %}
+<div class="form-group">
+    <label class="col-sm-2 control-label">{{i.label}}</label>
+    <div class="col-sm-8">{{i}}</div>
+    {{i.error}}
+</div>
+{% endfor %}
+<div class="hr-line-dashed"></div>
+<div class="form-group">
+
+<div style="padding-left: 200px;color:red">
+    <div class="col-sm-8"><b>{{ error }}</b></div>
+</div>
+</div>
+<div class="form-group">
+    <div class="col-sm-4 col-sm-offset-2">
+        <button class="btn btn-white" type="submit">Cancel</button>
+        <button class="btn btn-primary" type="submit">Save changes</button>
+    </div>
+</div>

@@ -1,0 +1,80 @@
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li class="nav-header">
+                        <div class="dropdown profile-element"> <span>
+                            <img alt="image" class="img-circle" src="/static/img/default.png" />
+                             </span>
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <span class="clear"> 
+                                <span class="block m-t-xs"> 
+                                <strong class="font-bold">{{ request.user }}</strong>
+                                </span> 
+                                <span class="text-muted text-xs block">
+                                 {% if request.user.is_anonymous %} 
+                                 匿名用户
+                                 {% else %}
+                                 {{ request.user }}
+                                 {% endif %}
+                                <b class="caret"></b>
+                                </span> 
+                             </span>
+                            </a>
+
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                <li><a href="profile.html">Profile</a></li>
+                                <li><a href="contacts.html">Contacts</a></li>
+                                <li><a href="mailbox.html">Mailbox</a></li>
+                                <li class="divider"></li>
+                                <li><a href={% url 'accounts_login'%}>Logout</a></li>
+                            </ul>
+                        </div>
+                        <div class="logo-element">
+                            Ops+
+                        </div>
+                    </li>
+                    <li>
+                        <a href="index.html"><i class="fa fa-th-large"></i> <span class="nav-label">基础资源管理</span> <span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a href={% url 'cmdb_idc' %}>机房管理</a></li>
+                            <li><a href={% url 'cmdb_server' %}>主机管理</a></li>
+                            <li><a href={% url 'salt_info' %}>Salt管理</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="#"><i class="fa fa-flask"></i> <span class="nav-label">应用管理</span> </a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-edit"></i> <span class="nav-label">作业调度</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a href="#">默认大屏</a></li>
+                            <li><a href="#">应用监控</a></li>
+                            <li><a href="#">组件监控</a></li>
+                            <li><a href="#">主机监控</a></li>
+                            <li><a href="#">告警事件</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-edit"></i> <span class="nav-label">监控管理</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a href="#">默认大屏</a></li>
+                            <li><a href="#">应用监控</a></li>
+                            <li><a href="#">组件监控</a></li>
+                            <li><a href="#">主机监控</a></li>
+                            <li><a href="#">告警事件</a></li>
+                        </ul>
+                    </li>
+                
+                   
+                    <li>
+                        <a href="mailbox.html"><i class="fa fa-group"></i> <span class="nav-label">权限管理 </span><span class="label label-warning pull-right">New</span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a href={% url 'accounts_user' %}>用户管理</a></li>
+                            <li><a href={% url 'accounts_group' %}>组管理</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+        </nav>

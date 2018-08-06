@@ -1,0 +1,43 @@
+<div class="form-group">
+    <label class="col-sm-2 control-label">{{ form.name.label }}</label>
+    <div class="col-sm-8">{{ form.name }}</div>
+    {{ form.name.error }}
+</div>
+<div class="form-group">
+    <label class="col-sm-2 control-label">{{ form.host.label }}</label>
+    <div class="col-sm-8">{{ form.host }}</div>
+    {{ form.host.error }}
+</div>
+<div class="form-group">
+    <label class="col-sm-2 control-label">{{ form.username.label }}</label>
+    <div class="col-sm-8">{{ form.username }}</div>
+    {{ form.username.error }}
+</div>
+
+<div class="form-group">
+    <label class="col-sm-2 control-label">{{ form.password.label }}</label>
+    <div class="col-sm-8">{{ form.password }}</div>
+    {{ form.password.error }}
+</div>
+<div class="form-group">
+    <label class="col-sm-2 control-label">{{ form.comment.label }}</label>
+    <div class="col-sm-8">{{ form.comment }}</div>
+    {{ form.comment.error }}
+</div>
+
+
+<div class="hr-line-dashed"></div>
+<div class="form-group">
+
+<div style="padding-left: 200px;color:red">
+    <div class="col-sm-8"><b>{{ error }}</b></div>
+</div>
+</div>
+<div class="form-group">
+    <div class="col-sm-4 col-sm-offset-2">
+        <button class="btn btn-white" type="submit">Cancel</button>
+        <button class="btn btn-primary" type="submit">Save changes</button>
+    </div>
+</div>
+</script>
+

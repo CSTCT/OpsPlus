@@ -1,0 +1,35 @@
+{% load custom_tags %}
+    {% for i in data.content %}
+    <tr class="gradeA odd" role="row">
+        <td><input type="checkbox" class="i-checks" id={{i.uuid}}></td>
+
+        <td><a  href="/cmdb/server/detail/{{ i.uuid }}">
+        {{ i.ips|ipio}}
+
+        </a></td>
+        <td>{{ i.hostname }}</td>
+        <td>{{ i.ops }}</td>
+        <td>{{ i.dev }}</td>
+        <td>{{ i.os }}</td>
+        <td>{{ i.cpu_model }}</td>
+        <td>{{ i.cpu_nums }}</td>
+        <td>{{ i.memory }}</td>
+        <td>{{ i.disk|strtodict:"total" }}</td>
+        {% if i.minion_status == 1 %}
+            <td><span class="btn btn-xs btn-success">{{ i.get_minion_status_display }}</span></td>
+        {% else %}
+            <td><span class="btn btn-xs btn-danger">{{ i.get_minion_status_display }}</span></td>
+        {% endif %}
+
+        <td>{{ i.get_status_display }}</td>
+        <td>{{ i.idc }}</td>
+
+        <td class="center">
+            <!--<a href="/cmdb/server/detail/{{ i.uuid }}" class="btn btn-xs btn-primary">详情</a>-->
+            <a href="/cmdb/server/edit/{{ i.uuid }}" class="btn btn-xs btn-success">编辑</a>
+            <a href="/cmdb/server/del?uuid={{ i.uuid }}" class="btn btn-xs btn-danger"  onclick="return confirm('确认删除吗？')">删除</a>
+
+        </td>
+    </tr>
+
+    {% endfor %}

@@ -1,0 +1,75 @@
+{% extends 'base/base_site.html' %} 
+<link href="/static/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+<link href="/static/css/animate.css" rel="stylesheet">
+<link href="/static/css/style.css" rel="stylesheet">
+<style>
+#DataTables_Table_0 {
+  font-size: 14px;
+  min-width: 1250px;
+}
+</style>
+
+{% block content %}
+<div class="ibox-title">
+  <h5>SaltMaster管理</h5>
+</div>
+<div class="ibox-content">
+  <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline">
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="dataTables_length" id="DataTables_Table_0_length" style="margin-bottom:15px;">
+          <a href={% url 'salt_add' %} class="btn btn-sm btn-success"><i class="fa fa-plus"></i> 添加SaltMaster</a>
+          <input type="text" placeholder="搜索" id="search" class="form-control input-sm">
+        </div>
+      </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover dataTables-example dataTable dtr-inline" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+      <thead>
+        <tr role="row">
+          <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >Salt名称</th>
+          <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >Salt地址</th>
+          <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >Salt状态</th>
+          <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >注释</th>
+          <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >更新时间</th>
+          <th  tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" >操作</th>
+        </tr>
+      </thead>
+      <tbody id="content">
+
+      {% include 'saltapi/salt_table.html'%}
+      </tbody>
+    </table>
+{% include 'common/paginator.html'%}
+</div>
+{% endblock %}
+{% block javascripts %}
+{{ block.super}}
+<!-- 实时搜索 -->
+<script type="text/javascript">
+    var flag;
+    function func1() {
+        clearTimeout(flag);
+        flag = setTimeout(function() {
+          data();
+        }, 200);
+
+    }
+    function  data(){
+        search = $('#search').val();
+        $.ajax({
+          url: '{% url 'user_search' %}',
+          type: 'GET',
+          dataType: 'html',
+          data: {"search":search},
+          success: function(data){
+          $("#content").html(data);
+          }
+        });
+    }
+    $("#search").keyup(function(event){
+      func1();
+    });
+</script>
+<!-- 实时搜索End -->
+
+{% endblock %}

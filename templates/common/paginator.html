@@ -1,0 +1,29 @@
+    <div class="row">
+      <div class="col-sm-6">
+        <div>当前第{{data.content.number}}页,共{{data.pages.num_pages}}页
+        每页显示 <select name="pagenumber"  id="pagenumber"></select>
+        </div>
+
+      </div>
+      <div class="col-sm-6">
+        <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
+          <ul class="pagination">
+            <li>
+              <a href="?page={% if data.content.has_previous %}{{data.content.previous_page_number}}{% else %}{{data.content.number}}{% endif %}&pagenumber={{data.pagenumber}}{% if keyword %}&keyword={{keyword}}{% endif %}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+            {% for page in data.pages.page_range %}
+            <!-- 选中页码-->
+            <li><a href="?page={{page}}&pagenumber={{data.pagenumber}}">{{page}}</a></li>
+            {% endfor %}
+            <li>
+              <a href="?page={% if data.content.has_next %}{{ data.content.next_page_number}}{% else %}{{data.content.number}}{% endif %}&pagenumber={{data.pagenumber}}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,196 @@
+{% extends "base/base_site.html" %} 
+{% block css%} 
+{{ block.super}}
+<link rel="stylesheet" href="/static/js/plugins/ztree/css/metroStyle/metroStyle.css"> 
+<!-- <link rel="stylesheet" type="text/css" href="/static/js/plugins/datetimepicker/css/bootstrap-datetimepicker.css"> -->
+<link rel="stylesheet" type="text/css" href="/static/js/plugins/daterangepicker/daterangepicker.css">
+<link rel="stylesheet" type="text/css" href="/static/js/plugins/pagination/simplePagination.css">
+
+
+{% endblock %} 
+{% block content %}
+<div class="row">
+    <div class="col-lg-3" style="min-width: 370px">
+        <div class="ibox float-e-margins">
+
+            <div class="ibox-title">
+                <h5>请选择时间</h5>
+            </div>
+            <div class="ibox-content">
+            <div class="input-group" style="width: 311px; margin-left: -5px;">
+                <input type="text" class="form-control date-picker" id="dateTimeRange" value="" />
+                <span class="input-group-addon">
+                    <i class="fa fa-calendar bigger-110"></i>
+                </span>
+                <input type="hidden" name="stime" id="stime" value="" />
+                <input type="hidden" name="etime" id="etime" value="" />
+            </div>
+
+            </div>
+            <div class="ibox-title">
+                <h5>请选择主机</h5>
+            </div>
+            <div class="ibox-content">
+                <ul id="zbxtree" class="ztree"></ul>
+            </div>
+        </div>
+    </div>
+{% include 'dashboard/chart.html'%}
+</div>
+{% endblock content %} 
+{% block javascripts %} 
+{{ block.super}}
+<!--<script src="/static/js/plugins/datetimepicker/js/bootstrap-datetimepicker.js"></script>-->
+<script src="/static/js/plugins/daterangepicker/moment.js"></script>
+<script src="/static/js/plugins/daterangepicker/daterangepicker.js"></script>
+
+<script src="/static/js/plugins/ztree/js/jquery.ztree.core.min.js"></script>
+<script src="/static/js/plugins/echarts/echarts.min.js"></script>
+<script src="/static/js/plugins/echarts/theme/vintage.js"></script>
+<script src="/static/js/plugins/pagination/jquery.simplePagination.js"></script>
+
+<script type="text/javascript">
+$(function() {
+    var start = moment().subtract('hours',1);
+    var end = moment();
+
+    function setvalue(start, end, label) { // 格式化日期显示框
+        $('#stime').val(start.format('YYYY-MM-DD HH:mm'));
+        $('#etime').val(end.format('YYYY-MM-DD HH:mm'));
+    }
+
+    $('#dateTimeRange').daterangepicker({
+        applyClass : 'btn-sm btn-success',
+        cancelClass : 'btn-sm btn-default',
+        locale: {
+            applyLabel: '确认',
+            cancelLabel: '取消',
+            fromLabel : '起始时间',
+            toLabel : '结束时间',
+            customRangeLabel : '自定义',
+            format: 'YYYY-MM-DD HH:mm',
+            separator : ' 至 ',
+            autoUpdateInput: true,
+
+        },
+        ranges : {
+            '最近1小时': [moment().subtract('hours',1), moment()],
+            '今日': [moment().startOf('day'), moment()],
+            '昨日': [moment().subtract(1,'days').startOf('day'), moment().subtract(1,'days').endOf('day')],
+            '最近7日': [moment().subtract(6,'days'), moment()],
+            '最近30日': [moment().subtract(29,'days'), moment()],
+            '本月': [moment().startOf("month"),moment().endOf("month")],
+            '上个月': [moment().subtract(1,"month").startOf("month"),moment().subtract(1,"month").endOf("month")]
+        },
+        startDate: start,
+        endDate: end,
+        autoApply: true, 
+        timePicker: true,
+        timePickerIncrement : 10, // 时间的增量，单位为分钟
+        timePicker24Hour : true, // 是否使用12小时制来显示时间
+        alwaysShowCalendars: true,
+    }, setvalue)
+    setvalue(start,end);
+});
+
+
+function time_to_timestamp(argv){
+    var date = new Date(Date.parse(argv.replace(/-/g, "/")));
+    date = date.getTime() / 1000;
+    return date
+}
+</script>
+<script type="text/javascript">
+//Get Graph Data
+    function process_data(event, treeId, treeNode, page_number){
+
+        $.ajax({
+          url: "{% url 'get_graph' %}",
+          type: 'POST',
+          data: JSON.stringify({'id':treeNode.id,'type': treeNode.type,'page_number': page_number}),
+          success: function(data){
+                var  stime = time_to_timestamp($("input[name='stime']").val());
+                var  etime = time_to_timestamp($("input[name='etime']").val());
+                var data = JSON.parse(data);
+                var graphids = data.graphids;
+                $(".custom_chart").remove();
+                $.each(graphids,function(k,v){
+                    if($('#'+v['graphid']).length<=0){
+                        $("#chart").append('<div class="custom_chart col-lg-12" id=' + '"' + v['graphid'] + '"' + 'style="height:300px"></div>');
+                    }
+                });
+                page(data.total_pages,data.current_page);
+                $.each(graphids,function(k,v){
+                    var pdata = JSON.stringify({'graphid': v.graphid,'stime': stime,'etime':etime});
+                    $.ajax({
+                        url: "{% url 'get_graph_data' %}",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: pdata,
+                        success: function(data){
+                            var legend = new Array();
+                            var id = data.graphid;
+                            $.each(data.data,function(k,v){
+                                legend[k] = v['name'];
+                            });
+                            monitor_echart(data.graphid,data.data,data.xtime,data.name,legend, data.data[0].units);
+                        }
+                    });
+                })
+          },
+        });
+    }
+</script>
+
+
+<script type="text/javascript">
+// ztree
+var zTreeObj;
+var setting = {
+    data: {
+        simpleData: {
+            enable: true,   
+            idKey: "treeId", 
+            pIdKey: "parentId"
+        },
+        key: {
+            name: "name",
+            title: "name"    
+        },
+    },
+    callback: {
+        onClick: process_data,
+    },    
+
+};
+
+$.get("/zabbix/ztree/data",function(data,status){
+    if(data.length >0 && status == "success"){
+        var data = JSON.parse(data);
+        $(document).ready(function() {
+            zTreeObj = $.fn.zTree.init($("#zbxtree"), setting, data);
+        });
+    }
+
+});
+</script>
+
+
+<script type="text/javascript">
+function page(total_pages,current_page){
+    $('.pagination').pagination({
+        items: total_pages,
+        currentPage: current_page,
+        cssStyle: 'light-theme',
+        onPageClick: function(pageNumber,event){
+            var treeObj = $.fn.zTree.getZTreeObj("zbxtree");
+            var nodes = treeObj.getSelectedNodes();
+            console.log(nodes);
+            process_data(event,nodes[0].id,nodes[0], pageNumber);
+
+        }
+    });
+};
+</script>
+
+{% endblock %}

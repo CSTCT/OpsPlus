@@ -1,0 +1,20 @@
+- model: cmdb.ISP
+  pk: 1
+  fields:
+     name: 电信
+
+- model: cmdb.ISP
+  pk: 2
+  fields:
+     name: 联通
+
+- model: cmdb.ISP
+  pk: 3
+  fields:
+     name: 移动
+
+- model: cmdb.ISP
+  pk: 4
+  fields:
+     name: BGP
+

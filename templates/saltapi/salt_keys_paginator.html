@@ -1,0 +1,25 @@
+  <div class="row">
+    <div class="col-sm-6">
+        <div>当前第{{data.accept.lists.content.number}}页,共{{data.accept.lists.pages.num_pages}}页 每页显示
+            <select name="pagenumber" id="pagenumber"></select>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <ul class="pagination">
+            <li>
+                <a href="?saltserver={{saltserver}}&page={% if data.accept.lists.content.has_previous %}{{data.accept.lists.content.previous_page_number}}{% else %}{{data.accept.lists.content.number}}{% endif %}&pagenumber={{data.accept.lists.pagenumber}}{% if keyword %}&keyword={{keyword}}{% endif %}" aria-label="Previous">
+      <span aria-hidden="true">&laquo;</span>
+    </a>
+            </li>
+            {% for page in data.accept.lists.pages.page_range %}
+            <!-- 选中页码-->
+            <li><a href="?saltserver={{saltserver}}&page={{page}}&pagenumber={{data.accept.lists.pagenumber}}">{{page}}</a></li>
+            {% endfor %}
+            <li>
+                <a href="?saltserver={{saltserver}}&page={% if data.accept.lists.content.has_next %}{{ data.accept.lists.content.next_page_number}}{% else %}{{data.accept.lists.content.number}}{% endif %}&pagenumber={{data.accept.lists.pagenumber}}" aria-label="Next">
+      <span aria-hidden="true">&raquo;</span>
+    </a>
+            </li>
+        </ul>
+    </div>
+</div>
